@@ -116,103 +116,54 @@
 <br>
 <br>
 
+<!--Carrito-->
 
-<!--columna de cartas-->
+<!--Filtro de búsqueda-->
+<div class="container buscador-producto">
+  <div class="row"> 
+      <div class="col-2"><label>Filtrar por categoría:</label></div>
+      <div class="col-2"><select id="buscadorProductoCategoria">
+        <option value="SinFiltrar" selected>(sin filtro)</option>
+      </select></div>
+  </div>
+  <div class="row">
+    <div class="col-2"><label>Filtrar por precio:</label></div>
+    <div class="col-2"><input id="buscadorProductoPrecio" type="number"></div>
+  </div>
+  <div class="row">
+    <div class="col-2"><button id="filtrarProducto" type="Button">Buscar</button></div>
+  </div>
+</div>
+
+<!--Productos no disponibles-->
+<div class="sinStock" id="sinStock">
+</div>
+
+<!--Cartas - Productos a vender-->
 <div class="container">
-<div class="row">
-    
-  <!--esto son las cartas-->
-  <div class="col-3">
-  <div class="card" style="width: 18rem;">
-    <img src="Img/IMG_20230713_140321507.jpg" class="card-img-top" alt="búho en atrapasueños">
-    <div class="card-body">
-      <h5 class="card-title">Koya n°1</h5>
-      <p class="card-text">Koya con hilo para poder colgar</p>
-      <a href="https://mpago.la/1rFo3pC" class="btn btn-primary">Pagar</a>
-    </div>
-  </div>
-  </div>
-
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/IMG_20230713_140322997.jpg" class="card-img-top" alt="Bring me the horizon">
-      <div class="card-body">
-        <h5 class="card-title">Koya n°2</h5>
-        <p class="card-text">Koya con hilo para poder colgar</p>
-        <a href="https://mpago.la/1mQf1YF" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/IMG_20230711_123258603.jpg" class="card-img-top" alt="Búho con plumas">
-      <div class="card-body">
-        <h5 class="card-title">Doble Shooky + Rj y Hendrick</h5>
-        <p class="card-text">Amigurumis de diferentes tamaños</p>
-        <a href="https://mpago.la/1C59hjW" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/IMG_20230711_130547996.jpg" class="card-img-top" alt="Búho con flores">
-      <div class="card-body">
-        <h5 class="card-title">RJ + Shooky</h5>
-        <p class="card-text">Rj y Shooky hechos a crochet</p>
-        <a href="https://mpago.la/1ryUUqr" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/IMG_20230712_125425194.jpg" class="card-img-top" alt="búho con lentes">
-      <div class="card-body">
-        <h5 class="card-title">Doble Rj</h5>
-        <p class="card-text">Dos RJ, uno para vos y otro para regalar</p>
-        <a href="https://mpago.la/1xoM6i1" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/IMG_20230810_132602915.jpg" class="card-img-top" alt="Bring me the horizon">
-      <div class="card-body">
-        <h5 class="card-title">Mang</h5>
-        <p class="card-text">Mang de perfil</p>
-        <a href="https://mpago.la/1DF7Wnj" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/IMG_20230810_132606687.jpg" class="card-img-top" alt="Búho con plumas">
-      <div class="card-body">
-        <h5 class="card-title">Mang + Hendrick</h5>
-        <p class="card-text">Mang de perfil</p>
-        <a href="https://mpago.la/2wipoCX" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3">
-    <div class="card" style="width: 18rem;">
-      <img src="Img/WhatsApp Image 2023-11-06 at 21.21.59.jpeg" class="card-img-top" alt="Búho con flores">
-      <div class="card-body">
-        <h5 class="card-title">La familia con IN</h5>
-        <p class="card-text">BT21 sin Van, pero con IN</p>
-        <a href="https://mpago.la/27ABAft" class="btn btn-primary">Pagar</a>
-      </div>
-    </div>
-  </div>
+<div class="row" id="productosSeleccionados">
 </div>
 </div>
 
+<!--Tabla productos adquiridos-->
+<table class="table productosComprados">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio unitario</th>
+      <th>Cantidad</th>
+    </tr>
+  </thead>
+  <tbody id="productosComprados">
+  </tbody>
+</table>
+
+<!--Pagar producto, mostrar saldo y confirmar pago-->
+<div class="saldo">
+  <div id="saldoFinal"></div>
+  <button id="confirmarPago" class="btn btn-success btn-lg confirmarPago" type="button">Confirmar Pago</button>
+  <div class="pagoConfirmado" id="pagoConfirmado"></div>
+</div>
 
 <!--esto es el pie de página-->
 <footer class="bg-light text-center text-white">
@@ -235,7 +186,7 @@
       <a
         class="btn text-white btn-floating m-1"
         style="background-color: #ac2bac;"
-        href="https://www.instagram.com/lil._green"
+        href="https://www.instagram.com/Hoshirane.ar"
         role="button"
         ><i class="fab fa-instagram"></i
       ></a>

@@ -5,7 +5,7 @@ body section{
 
 section h1{
     text-align: center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 39px;
     font-style: italic;
     }
@@ -39,12 +39,59 @@ section p{
    border: solid 3px #f8a232;
 }
 
+.container.buscador-producto {
+    gap: 1em;
+    margin: auto;
+    padding: 0.5em;
+}
+
+.container.buscador-producto .row{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1%;
+}
+
+.container.buscador-producto label{
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.container.buscador-producto select, .container.buscador-producto input, .container.buscador-producto button{ 
+    width: 100%;
+}
+
 .card {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #ea896b;
     background-color: #e3e0e0;
 }
 
+.productosComprados{
+    width: 70%;
+    margin: 5%;
+    margin-top: 2em;
+}
+
+.saldo, .sinStock {
+    text-align: center;
+}
+
+.saldo{
+    display: table;
+    margin: auto;
+}
+
+#confirmarPago{
+    margin-top: 1em;
+}
+
+.sinStock {
+    color:#ca2020;
+}
+
+.pagoConfirmado {
+    color: rgb(25, 222, 25);
+}
 
 .pie {
     width: 100%;
