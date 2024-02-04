@@ -67,12 +67,17 @@ section p{
 }
 
 .productosComprados{
-    width: 70%;
-    margin: 5%;
+    max-width: 90%;
+    margin: auto;
     margin-top: 2em;
 }
 
-.saldo, .sinStock {
+.productosCompradosCantidad {
+    display: flex;
+    justify-content: space-between;
+}
+
+.saldo {
     text-align: center;
 }
 
@@ -83,10 +88,6 @@ section p{
 
 #confirmarPago{
     margin-top: 1em;
-}
-
-.sinStock {
-    color:#ca2020;
 }
 
 .pagoConfirmado {

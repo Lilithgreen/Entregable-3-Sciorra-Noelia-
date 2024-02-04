@@ -1,81 +1,3 @@
-const productosOriginal=[
-    {
-        id: "RJ1",
-        categoria: "Amigurumi",
-        nombre: "Llavero RJ",
-        cantidad: 5,
-        precio: 3500,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "Koya1",
-        categoria: "Amigurumi",
-        nombre: "Llavero Koya",
-        cantidad: 6,
-        precio: 3500,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "Tata15cm",
-        categoria: "Amigurumi",
-        nombre: "Tata 15cm",
-        cantidad: 3,
-        precio: 5000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "Chimmy30cm",
-        categoria: "Amigurumi",
-        nombre: "Chimmy 30cm",
-        cantidad: 7,
-        precio: 7000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "SVTLogoM",
-        categoria: "Remera",
-        nombre: "Remera bordada Seventeen",
-        talle: "M",
-        cantidad: 2,
-        precio: 8000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "AteezLogoS",
-        categoria: "Remera",
-        nombre: "Remera bordada Ateez",
-        talle: "S",
-        cantidad: 2,
-        precio: 8000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "BT21x10",
-        categoria: "Photocard",
-        nombre: "10 photocards BT21",
-        cantidad: 2,
-        precio: 3000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "VAVx10",
-        categoria: "Photocard",
-        nombre: "10 photocards VAV",
-        cantidad: 2,
-        precio: 3000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    },
-    {
-        id: "VAVx50",
-        categoria: "Photocard",
-        nombre: "50 photocards VAV",
-        cantidad: 1,
-        precio: 10000,
-        imagen: "Img/IMG_20230713_140321507.jpg"
-    }
-]
-
-
 //Inicializo de variables
 let productosComprados = [{precio: 0, cantidad: 0}]
 let productos = []
@@ -86,11 +8,20 @@ const seleccionCategoria = document.getElementById("buscadorProductoCategoria")
 const seleccionPrecio = document.getElementById("buscadorProductoPrecio")
 const tablaProductos = document.getElementById("productosComprados")
 const saldoAPagar = document.getElementById("saldoFinal")
-const sinStock = document.getElementById("sinStock")
 const pagarProductos = document.getElementById("confirmarPago")
-const pagoConfirmado = document.getElementById("pagoConfirmado")
 
 //Funciones
+//Inicializa mediante el uso de promesas el contenido de la página
+function InicializacionPagina(){
+    fetch('json/productos.json')
+    .then(response => response.json())
+    .then(data => new Promise(() => {
+            productosOriginal = data
+            listadoCategoriaProductos(productosOriginal) //Se inicializa el contenido dentro del menú desplegable de categorías
+            inicializacionStock(productosOriginal, productosComprados) //Configura el stock (y si hay algo para colocar en el carrito) al cargar la página
+            mostrarProductos(productos) //Se inicializa el contenido a mostrar
+    }))
+}
 //Inicializa el stock disponible de productos
 const inicializacionStock = (productosOriginal, productosEnCarrito) => {
     if(localStorage.getItem("stockDisponible") === null && sessionStorage.getItem("carritoOcupado") === null){ //Cuando aún no se compró nada ni se guardó en carrito
@@ -116,7 +47,6 @@ const mostrarProductos = listaProductosAMostrar => {
     if(limpiarListado.length > 0){
         limpiarListado.forEach(producto => producto.remove())
     }
-    sinStock.innerHTML = ``
     const listadoProductos = document.getElementById("productosSeleccionados")
     const productoDisponible = []
     listaProductosAMostrar.forEach(producto => {
@@ -132,7 +62,7 @@ const mostrarProductos = listaProductosAMostrar => {
                 <h5 class="card-title">${producto.nombre}</h5>
                 <p class="card-text">Precio: $${producto.precio}</p>
                 <p class="card-text">Cantidad disponible: ${producto.cantidad}</p>
-                <button id="${producto.id}" class="btn btn-primary" type="button" onclick="comprarProducto('${producto.id}')">Pagar</button>
+                <button class="btn btn-primary" type="button" onclick="cantidadProductoAComprar('${producto.id}', ${producto.cantidad})">Pagar</button>
                 </div>
             </div>`
             productoDisponible.push(carta)
@@ -172,39 +102,96 @@ const filtroProductos = (listaProductos, filtroCategoria, filtroPrecio) => {
     return listaFiltrada
 }
 
-//Agrega un producto a pagar y muestra los productos restantes del filtro seleccionado anteriormente
-const comprarProducto = idProductoComprado => {
+//Permite seleccionar la cantidad a comprar de un cierto producto
+const cantidadProductoAComprar = (idProductoComprado, cantidadMaximaProducto) => {
+    const {value: cantidad} = Swal.fire({
+        title: "Cantidad",
+        text: "¿Cuántos desea comprar? Maximo " + cantidadMaximaProducto + " unidades",
+        input: "number",
+        inputPlaceholder: "Ingrese cantidad",
+        confirmButtonText: "Agregar al carrito",
+        confirmButtonColor: "#f8a232",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        inputValidator: value => {
+            if(value <= 0 || value > cantidadMaximaProducto){
+                return "Cantidad ingresada no válida"
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            agregarProductoACarrito(idProductoComprado, parseInt(result.value)) //Se convierte a int el valor porque si no lo pasa como string
+            Swal.fire({
+                title: "Agregado al carrito",
+                icon: "success",
+                confirmButtonColor: "#f8a232",
+                confirmButtonText: "Confirmar"
+            });
+        } else {
+            Swal.fire({
+                text: "Compra cancelada",
+                icon: "info"
+            });
+        }
+    });
+}
+
+//Agrega un producto al carrito y muestra los productos restantes del filtro seleccionado anteriormente
+const agregarProductoACarrito = (idProductoComprado, cantidadComprada) => {
     if(calcularSaldoAPagar(productosComprados) === 0) //Revisa si el contenido de productosComprados es nulo. Esto evita tener un primer elemento en la lista que sea undefined
     {
         productosComprados = []
     }
-    productos.forEach(producto =>{
-        if(producto.id === idProductoComprado){ //Busca cuál es el producto que se compró
-            producto.cantidad -= 1
-            if(productosComprados.find(productoComprado => productoComprado.id === idProductoComprado)){ //Revisa si en el carrito ya tenía otro del mismo id
-                productosComprados.forEach(productoAgregado => {
-                    if(productoAgregado.id === idProductoComprado){ //Recorre el carrito para sumarle 1 al producto con el mismo id
-                        productoAgregado.cantidad += 1
-                    }
-                })
-            }
-            else{
-                productosComprados.push({
-                    id: producto.id,
-                    nombre: producto.nombre,
-                    precio: producto.precio,
-                    cantidad: 1
-                })
-            }
+    let indiceDelProducto = productos.findIndex(el => el.id === idProductoComprado) //Busca el producto que se mandó al carrito dentro del stock total disponible
+    if(productos[indiceDelProducto].cantidad - cantidadComprada >= 0) //Evita que ante un problema haya cantidad negativa en stock. Necesario para cuando se suma stock dentro del carrito
+    {
+        productos[indiceDelProducto].cantidad -= cantidadComprada
+        if(productosComprados.find(productoComprado => productoComprado.id === idProductoComprado)){ //Revisa si en el carrito ya tenía otro del mismo id
+            let indiceDelProductoEnCarrito = productosComprados.findIndex(el => el.id === idProductoComprado) //Busca en el carrito el proucto agregado anteriormente para sumarle la nueva cantidad
+            productosComprados[indiceDelProductoEnCarrito].cantidad += cantidadComprada
         }
-    })
+        else{
+            productosComprados.push({
+                id: productos[indiceDelProducto].id,
+                nombre: productos[indiceDelProducto].nombre,
+                precio: productos[indiceDelProducto].precio,
+                cantidad: cantidadComprada
+            })
+        }
+    }
+    else{
+        Swal.fire({
+            title: "Stock insuficiente",
+            text: "No hay más stock del producto seleccionado",
+            icon: "error"
+            });
+    }
+    actualizarStock(productosComprados, productos)
+}
+
+//Saca un producto del carrito
+const sacarProductoDeCarrito = idProductoSacado => {
+    let indiceDelProducto = productos.findIndex(el => el.id === idProductoSacado)
+    productos[indiceDelProducto].cantidad += 1
+    let indiceDelProductoEnCarrito = productosComprados.findIndex(el => el.id === idProductoSacado)
+    if(productosComprados[indiceDelProductoEnCarrito].cantidad > 1){
+        productosComprados[indiceDelProductoEnCarrito].cantidad -= 1
+    }
+    else{
+        productosComprados = productosComprados.filter(el => el.id !== idProductoSacado)
+        if(productosComprados.length === 0){
+            productosComprados = [{precio: 0, cantidad: 0}]
+        }
+    }
+    actualizarStock(productosComprados, productos)
+}
+
+//Actualiza el stock disponible y en carrito, ya sea porque se agregó o sacó un producto del carrito
+const actualizarStock = (productosComprados, productos) => {
     mostrarProductosTabla(productosComprados)
     guardarEstadoCompra(productos, productosComprados)
     const stockRemanente = filtroProductos(productos, seleccionCategoria.value, seleccionPrecio.value)
     mostrarProductos(stockRemanente)
-    if(stockRemanente.length === 0){
-        sinStock.innerHTML = `<h2>Lo siento, ya no tenemos más stock del filtro aplicado</h2>` 
-    }
 }
 
 //Calcula el saldo final a pagar
@@ -219,16 +206,23 @@ const mostrarSaldoAPagar = productosComprados => {
 const mostrarProductosTabla = productosCompradosTabla => {
     const productoEnCarrito = []
     tablaProductos.innerHTML = ``
-    productosCompradosTabla.forEach(producto => {
-        const productoAMostrar = document.createElement("tr")
-        productoAMostrar.innerHTML = 
-        `
-        <td>${producto.nombre}</td>
-        <td>${producto.precio}</td>
-        <td>${producto.cantidad}</td>
-        `
-        productoEnCarrito.push(productoAMostrar)
-    })
+    if(calcularSaldoAPagar(productosCompradosTabla) > 0) //Valida que haya que agregar contenido a la tabla. Caso contrario, la reestablece
+    {
+        productosCompradosTabla.forEach(producto => {
+            const productoAMostrar = document.createElement("tr")
+            productoAMostrar.innerHTML = 
+            `
+            <td>${producto.nombre}</td>
+            <td>${producto.precio}</td>
+            <td class="productosCompradosCantidad">
+                <button class="btn btn-danger" type="button" onclick="sacarProductoDeCarrito('${producto.id}')">-</button>
+                ${producto.cantidad}
+                <button class="btn btn-success" type="button" onclick="agregarProductoACarrito('${producto.id}', 1)">+</button>
+            </td>
+            `
+            productoEnCarrito.push(productoAMostrar)
+        })
+    }
     tablaProductos.append(...productoEnCarrito)
     mostrarSaldoAPagar(productosCompradosTabla)
 }
@@ -261,7 +255,13 @@ botonBuscarFiltro.onclick = () => {
         mostrarProductos(productosFiltrados)
     }
     else {
-        sinStock.innerHTML = `<h2>Lo siento, no tenemos productos con las especificaciones realizadas</h2>`
+        Swal.fire({
+            title: "Sin stock",
+            text: "Lo siento, no tenemos productos con las especificaciones realizadas",
+            icon: "warning",
+            confirmButtonColor: "#f8a232",
+            confirmButtonText: "Confirmar"
+          });
     }
 }
 
@@ -269,24 +269,32 @@ botonBuscarFiltro.onclick = () => {
 pagarProductos.onclick = () => {
     if(calcularSaldoAPagar(productosComprados) === 0)
     {
-        pagoConfirmado.innerHTML = `<h2>Disculpe, pero no ha comprado nada</h2>`
+        Swal.fire({
+            title: "Sin stock",
+            text: "Disculpe, pero aún no ha comprado nada",
+            icon: "error",
+            confirmButtonColor: "#f8a232",
+            confirmButtonText: "Confirmar"
+          });
     }
     else
     {
-        sinStock.innerHTML = ``
         productosComprados = [{precio: 0, cantidad: 0}]
         mostrarSaldoAPagar(productosComprados)
         mostrarProductosTabla(productosComprados)
         guardarCompraFinalizada(productos)
-        pagoConfirmado.innerHTML = `<h2>Producto pagado. ¡Que tenga buen día!</h2>`
+
+        Swal.fire({
+            title: "Compra confirmada",
+            text: "Producto pagado. ¡Que tenga buen día!",
+            icon: "success",
+            confirmButtonColor: "#f8a232",
+            confirmButtonText: "Confirmar"
+          });
     }
 }
 
-
-
+//Inicializo el contenido original que hay en stock
 //Ejecución incial de funciones
 //reinicioEjecucion() //Reinicia stock y carrito --> Usarlo para probar el funcionamiento de la página
-
-listadoCategoriaProductos(productosOriginal) //Se inicializa el contenido dentro del menú desplegable de categorías
-inicializacionStock(productosOriginal, productosComprados) //Configura el stock (y si hay algo para colocar en el carrito) al cargar la página
-mostrarProductos(productos) //Se inicializa el contenido a mostrar
+InicializacionPagina()

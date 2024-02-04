@@ -1,0 +1,76 @@
+[
+    {
+        "id": "RJ1",
+        "categoria": "Amigurumi",
+        "nombre": "Llavero RJ",
+        "cantidad": 5,
+        "precio": 3500,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "Koya1",
+        "categoria": "Amigurumi",
+        "nombre": "Llavero Koya",
+        "cantidad": 6,
+        "precio": 3500,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "Tata15cm",
+        "categoria": "Amigurumi",
+        "nombre": "Tata 15cm",
+        "cantidad": 3,
+        "precio": 5000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "Chimmy30cm",
+        "categoria": "Amigurumi",
+        "nombre": "Chimmy 30cm",
+        "cantidad": 7,
+        "precio": 7000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "SVTLogoM",
+        "categoria": "Remera",
+        "nombre": "Remera bordada Seventeen",
+        "talle": "M",
+        "cantidad": 2,
+        "precio": 8000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "AteezLogoS",
+        "categoria": "Remera",
+        "nombre": "Remera bordada Ateez",
+        "talle": "S",
+        "cantidad": 2,
+        "precio": 8000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "BT21x10",
+        "categoria": "Photocard",
+        "nombre": "10 photocards BT21",
+        "cantidad": 2,
+        "precio": 3000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "VAVx10",
+        "categoria": "Photocard",
+        "nombre": "10 photocards VAV",
+        "cantidad": 2,
+        "precio": 3000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    },
+    {
+        "id": "VAVx50",
+        "categoria": "Photocard",
+        "nombre": "50 photocards VAV",
+        "cantidad": 1,
+        "precio": 10000,
+        "imagen": "Img/IMG_20230713_140321507.jpg"
+    }
+]
